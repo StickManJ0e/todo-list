@@ -16,15 +16,20 @@ body {
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    font-family: 'Montserrat', sans-serif;
 }
 
 header {
+    display: flex;
     height: 150px;
     background-color: var(--main-accent-color);
+    justify-content: flex-start;
+    align-items: center;
 }
 
 header > h1 {
     color: white;
+    margin-left: 50px;
 }
 
 footer {
