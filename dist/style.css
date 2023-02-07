@@ -55,5 +55,38 @@ footer {
 #main {
     flex: 4;
     background-color: var(--main-color);
+    position: relative;
+}
+
+#add-task {
+    border-radius: 50%;
+    border: 0 none;
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    background-color: var(--secondary-accent-color);
+    color: white;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 25px;
+}
+
+#add-task:hover {
+    filter: brightness(1.2);
+}
+
+#add-task-menu {
+    position: absolute;
+    background-color: var(--secondary-accent-color);
+    width: 500px;
+    height: 400px;
+    inset: 0;
+    margin: auto;
+}
+
+.blur > :not(#add-task-menu) {
+    filter: blur(1px);
+    pointer-events: none;
 }
 

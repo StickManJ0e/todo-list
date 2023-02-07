@@ -1,1 +1,1 @@
-console.log("index.js is working");
+(()=>{console.log("index.js is working");let e=document.querySelector("#add-task"),t=document.querySelector("body");e.addEventListener("click",(()=>{t.classList.add("blur"),function(){let e=document.createElement("div");e.setAttribute("id","add-task-menu"),t.appendChild(e)}()}))})();
