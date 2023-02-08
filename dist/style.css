@@ -83,10 +83,64 @@ footer {
     height: 400px;
     inset: 0;
     margin: auto;
+    display: grid;
+    grid-template-rows: 1fr 1fr 3fr 1fr 1fr 1fr;
+    align-items: center;
+    justify-items: center;
 }
 
 .blur > :not(#add-task-menu) {
     filter: blur(1px);
     pointer-events: none;
+}
+
+#exit-menu-button {
+    width: 25px;
+    height: 25px;
+    justify-self: end;
+    margin-right: 25px;
+}
+
+#exit-menu-button::before {
+    content: 'x';
+}
+
+#submit-form-button {
+    width: 150px;
+    height: 35px;
+}
+
+#submit-form-button::before {
+    content: 'ADD';
+}
+
+#task-name {
+    width: 350px;
+    height: 30px;
+}
+
+#task-description {
+    width: 350px;
+    height: 150px;
+}
+
+#task-due-date {
+    height: 30px;
+}
+
+#submit-form-button,
+#task-name,
+#task-description,
+#task-due-date,
+#add-task-menu {
+    border-radius: 7.5px;
+    border: none;
+}
+
+#date-radio-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
