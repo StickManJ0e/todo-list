@@ -72,7 +72,7 @@ footer {
     margin: 25px;
 }
 
-#add-task:hover {
+button:hover {
     filter: brightness(1.2);
 }
 
@@ -117,11 +117,13 @@ footer {
 #task-name {
     width: 350px;
     height: 30px;
+    position: relative;
 }
 
 #task-description {
     width: 350px;
     height: 150px;
+    position: relative;
 }
 
 #task-due-date {
@@ -143,4 +145,25 @@ footer {
     align-items: center;
     gap: 15px;
 }
+
+#sidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+#sidebar > button {
+    width: 200px;
+    height: 35px;
+}
+
+#tasks-inbox {
+    margin-top: 1rem;
+}
+
+#tasks-inbox::before {
+    content: "INBOX";
+}
+
 
