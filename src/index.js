@@ -209,12 +209,34 @@ function createAddProjectMenu() {
     let exitMenuButton = createElementWithID('button', 'exit-menu-button', addProjectMenu);
     exitProjectMenu(exitMenuButton);
 
-    let projectNameInput = createInputWithID('project-name', 'text', 'name');
+    let projectNameInput = createInputWithPlaceholder('project-name', 'text', 'PROJECT NAME', 'name');
     projectNameInput.setAttribute('required', '');
     addProjectMenu.appendChild(projectNameInput);
 
     let submitFormButton = createElementWithID("button", "submit-form-button", addProjectMenu);
     submitFormButton.setAttribute('type', 'submit');
+    submitProjectForm(addProjectMenu);
+}
+
+function addToProjectList(name) {
+    let project = createProject(name);
+    projectArrays.push(project);
+}
+
+function submitProjectForm(form) {
+    form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        let data = Object.fromEntries(new FormData(event.target).entries());
+        addToProjectList(data.name);
+
+        //Returns to main page
+        removeAddProjectMenu();
+        body.classList.remove('blur');
+        
+        projectArrays.forEach((array) => {
+            console.log(array.getProjectname());
+        })
+    })
 }
 
 //On page load
