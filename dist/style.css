@@ -89,7 +89,7 @@ button:hover {
     justify-items: center;
 }
 
-.blur > :not(#add-task-menu) {
+.blur > :not(form) {
     filter: blur(1px);
     pointer-events: none;
 }
@@ -158,12 +158,32 @@ button:hover {
     height: 35px;
 }
 
-#tasks-inbox {
+button#tasks-inbox {
     margin-top: 1rem;
 }
 
-#tasks-inbox::before {
-    content: "INBOX";
+.projects {
+    display: flex;
+    flex-direction: column;
+}
+
+.project-heading {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+#add-project-menu {
+    position: absolute;
+    background-color: var(--secondary-accent-color);
+    width: 500px;
+    height: 300px;
+    inset: 0;
+    margin: auto;
+    display: grid;
+    grid-template-rows: 1fr 3fr 1fr;
+    align-items: center;
+    justify-items: center;
 }
 
 

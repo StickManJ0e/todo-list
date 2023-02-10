@@ -4,6 +4,7 @@ let addTaskButton = document.querySelector('#add-task');
 let body = document.querySelector('body');
 let projectArrays = [];
 let currentProject;
+let addProjectButton = document.querySelector('#add-project-button');
 
 //Function that creates a input with a custom id and input type
 function createInputWithID(idName, inputType, name) {
@@ -105,8 +106,8 @@ function createAddTaskMenu() {
     let addTaskMenu = createElementWithID("form", "add-task-menu", body);
 
     //Create an exit menu button that exits back to the page on click
-    let exitMenuButton = createElementWithID('button', 'exit-menu-button', addTaskMenu);
-    exitMenu(exitMenuButton);
+    let exitTaskMenuButton = createElementWithID('button', 'exit-menu-button', addTaskMenu);
+    exitTaskMenu(exitTaskMenuButton);
 
     //Create form inputs
     let taskNameInput = createInputWithPlaceholder('task-name', 'text', 'Task Name', 'name');
@@ -144,16 +145,28 @@ function removeAddTaskMenu() {
     addTaskMenu.remove();
 }
 
-function exitMenu(exitMenuButton) {
-    exitMenuButton.addEventListener('click', () => {
+function removeAddProjectMenu() {
+    let addProjectMenu = document.querySelector('#add-project-menu');
+    addProjectMenu.remove();
+}
+
+function exitTaskMenu(exitTaskMenuButton) {
+    exitTaskMenuButton.addEventListener('click', () => {
         removeAddTaskMenu();
         body.classList.remove('blur');
     });
 }
 
+function exitProjectMenu(exitProjectMenuButton) {
+    exitProjectMenuButton.addEventListener('click', () => {
+        removeAddProjectMenu();
+        body.classList.remove('blur');
+    });
+}
+
 addTaskButton.addEventListener('click', () => {
-    body.classList.add('blur');
     createAddTaskMenu();
+    body.classList.add('blur');
 });
 
 //A task object
@@ -177,18 +190,34 @@ let createProject = (projectName) => {
     return { getProjectname, taskArray };
 }
 
-function createDefaultProjects() {
-    let sidebar = document.querySelector('#sidebar');
-    let inbox = document.createElement('button');
-    inbox.setAttribute('id', 'tasks-inbox');
-    sidebar.appendChild(inbox);
+function createInboxProject() {
     let inboxProject = createProject("inbox");
     projectArrays.push(inboxProject);
     currentProject = projectArrays[0];
 }
 
+addProjectButton.addEventListener('click', () => {
+    createAddProjectMenu();
+    body.classList.add('blur');
+})
+
+function createAddProjectMenu() {
+    let addProjectMenu = document.createElement('form');
+    addProjectMenu.setAttribute('id', 'add-project-menu');
+    body.appendChild(addProjectMenu);
+
+    let exitMenuButton = createElementWithID('button', 'exit-menu-button', addProjectMenu);
+    exitProjectMenu(exitMenuButton);
+
+    let projectNameInput = createInputWithID('project-name', 'text', 'name');
+    projectNameInput.setAttribute('required', '');
+    addProjectMenu.appendChild(projectNameInput);
+
+    let submitFormButton = createElementWithID("button", "submit-form-button", addProjectMenu);
+    submitFormButton.setAttribute('type', 'submit');
+}
 
 //On page load
-createDefaultProjects() 
+createInboxProject() 
 
 // console.log((currentProject.taskArray[0]).getTaskName());
