@@ -5,6 +5,8 @@ let body = document.querySelector('body');
 let projectArrays = [];
 let currentProject;
 let addProjectButton = document.querySelector('#add-project-button');
+let mainDiv = document.querySelector('div#main');
+let projects;
 
 //Function that creates a input with a custom id and input type
 function createInputWithID(idName, inputType, name) {
@@ -43,6 +45,21 @@ function makeInputRequired(...elements) {
 function createElementWithID(elementType, idName, appendLocation) {
     let element = document.createElement(elementType);
     element.setAttribute('id', idName);
+    appendLocation.appendChild(element);
+    return element;
+}
+
+function createElementWithClassText(elementType, className, appendLocation, text) {
+    let element = document.createElement(elementType);
+    element.classList.add(className);
+    element.textContent = text;
+    appendLocation.appendChild(element);
+    return element;
+}
+
+function createElementWithClass(elementType, className, appendLocation) {
+    let element = document.createElement(elementType);
+    element.classList.add(className);
     appendLocation.appendChild(element);
     return element;
 }
@@ -98,7 +115,7 @@ function createProjectSelector(addTaskMenu) {
         option.setAttribute('value', optionName);
         option.textContent = optionName;
         projectSelector.appendChild(option);
-    }
+    };
 }
 
 function createAddTaskMenu() {
@@ -121,18 +138,27 @@ function createAddTaskMenu() {
     (createInputDivWithLabel(dateRadioDiv, 'task-date-input')).appendChild(taskDueDateInput);
     createRadioInputs(dateRadioDiv, 'priority', 'low', 'medium', 'high');
     createProjectSelector(addTaskMenu);
-
     makeInputRequired(taskNameInput, taskDueDateInput);
+
+    //Make a submit form button and call function when form submitted
     let submitFormButton = createElementWithID("button", "submit-form-button", addTaskMenu);
     submitFormButton.setAttribute('type', 'submit');
     submitTaskForm(addTaskMenu);
 }
 
+//Takes form inputs and turns into a Task List
 function submitTaskForm(form) {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         let data = Object.fromEntries(new FormData(event.target).entries());
-        addToTaskList(data.name, data.description, data.date, data.priority);
+        addToTaskList(data.name, data.description, data.date, data.priority, data.project);
+        removeProjectTasks(); 
+        createProjectTasks();
+
+        for (let i = 0; i < (currentProject.taskArray).length; i++) {
+            console.log((currentProject.taskArray)[i].getTaskName());
+        }
+        console.log('break');
 
         //Returns to main page
         removeAddTaskMenu();
@@ -170,18 +196,26 @@ addTaskButton.addEventListener('click', () => {
 });
 
 //A task object
-let Task = (taskName, taskDescription, taskDueDate, taskPriority) => {
+let Task = (taskName, taskDescription, taskDueDate, taskPriority, taskProject) => {
     let getTaskName = () => taskName;
     let getTaskDescription = () => taskDescription;
     let getTaskDueDate = () => taskDueDate;
     let getTaskPriority = () => taskPriority;
+    let getTaskProject = () => taskProject;
 
-    return { getTaskName, getTaskDescription, getTaskDueDate, getTaskPriority };
+    return { getTaskName, getTaskDescription, getTaskDueDate, getTaskPriority, getTaskProject };
 }
 
-function addToTaskList(name, description, date, priority) {
-    let task = Task(name, description, date, priority);
-    (currentProject.taskArray).push(task);
+
+//Add task to selected project list
+function addToTaskList(name, description, date, priority, project) {
+    let task = Task(name, description, date, priority, project);
+    let projectIndex = projectArrays.findIndex(object => object.getProjectname() === project);
+    (projectArrays[projectIndex].taskArray).push(task);
+
+    if (projectIndex !== 0) {
+        (projectArrays[0].taskArray).push(task);
+    }
 }
 
 let createProject = (projectName) => {
@@ -194,6 +228,7 @@ function createInboxProject() {
     let inboxProject = createProject("inbox");
     projectArrays.push(inboxProject);
     currentProject = projectArrays[0];
+    changeCurrentProject()
 }
 
 addProjectButton.addEventListener('click', () => {
@@ -227,19 +262,71 @@ function submitProjectForm(form) {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
         let data = Object.fromEntries(new FormData(event.target).entries());
-        addToProjectList(data.name);
+        addToProjectList((data.name).toLowerCase());
+        createProjectDiv((data.name).toUpperCase());
+        changeCurrentProject();
 
         //Returns to main page
         removeAddProjectMenu();
         body.classList.remove('blur');
-        
-        projectArrays.forEach((array) => {
-            console.log(array.getProjectname());
+    })
+}
+
+function changeCurrentProject() {
+    projects = document.querySelectorAll('.project');
+    projects.forEach((project) => {
+        project.addEventListener('click', () => {
+            let projectIndex = projectArrays.findIndex(object => object.getProjectname() === (project.textContent).toLowerCase());
+            currentProject = projectArrays[projectIndex];
+            removeProjectTasks();
+            createProjectTasks();
         })
     })
 }
 
+function createProjectDiv(name) {
+    let projectsDiv = document.querySelector('.projects');
+    let projectDiv = createElementWithClassText('button', 'project', projectsDiv, name);
+}
+
+function removeProjectTasks() {
+    let currentTaskDiv = document.querySelector('.tasks-div');
+    let checkDiv = (currentTaskDiv !== null) ? currentTaskDiv.remove() : "";
+}
+
+function createProjectTasks() {
+    let tasksDiv = createElementWithClass('div', 'tasks-div', mainDiv);
+    for (let i = 0; i < (currentProject.taskArray).length; i++) {
+        createTask(tasksDiv, i);
+    }
+}
+
+function createTask(appendLocation, indexNum) {
+    let taskDiv = createElementWithClass('div', 'task-div', appendLocation);
+
+    let completeTaskCheckbox = document.createElement('input');
+    completeTaskCheckbox.classList.add('complete-task-checkbox');
+    completeTaskCheckbox.setAttribute('type', 'checkbox');
+    taskDiv.appendChild(completeTaskCheckbox);
+    completeTask(completeTaskCheckbox, taskDiv, indexNum);
+
+    let taskName = createElementWithClassText('div', 'task-name', taskDiv, (currentProject.taskArray[indexNum].getTaskName()));
+}
+
+function completeTask(checkbox, taskDiv, indexNum) {
+    checkbox.addEventListener('change', () => {
+        taskDiv.remove();
+        (currentProject.taskArray).splice(indexNum, 1);
+
+        for (let i = 0; i < (currentProject.taskArray).length; i++) {
+            console.log((currentProject.taskArray)[i].getTaskName());
+        }
+        console.log('break');
+    })
+}
+
 //On page load
-createInboxProject() 
+createInboxProject()
+console.log('now working');
 
 // console.log((currentProject.taskArray[0]).getTaskName());
