@@ -1,5 +1,7 @@
 console.log("index.js is working");
 
+import { format } from 'date-fns';
+
 let addTaskButton = document.querySelector('#add-task');
 let body = document.querySelector('body');
 let projectArrays = [];
@@ -150,15 +152,12 @@ function createAddTaskMenu() {
 function submitTaskForm(form) {
     form.addEventListener('submit', (event) => {
         event.preventDefault();
+
+        //Creates a Task object using form inputs
         let data = Object.fromEntries(new FormData(event.target).entries());
         addToTaskList(data.name, data.description, data.date, data.priority, data.project);
-        removeProjectTasks(); 
+        removeProjectTasks();
         createProjectTasks();
-
-        for (let i = 0; i < (currentProject.taskArray).length; i++) {
-            console.log((currentProject.taskArray)[i].getTaskName());
-        }
-        console.log('break');
 
         //Returns to main page
         removeAddTaskMenu();
@@ -176,6 +175,11 @@ function removeAddProjectMenu() {
     addProjectMenu.remove();
 }
 
+function removeTaskDetailsMenu() {
+    let detailsDiv = document.querySelector('.details-div');
+    detailsDiv.remove();
+}
+
 function exitTaskMenu(exitTaskMenuButton) {
     exitTaskMenuButton.addEventListener('click', () => {
         removeAddTaskMenu();
@@ -189,6 +193,13 @@ function exitProjectMenu(exitProjectMenuButton) {
         body.classList.remove('blur');
     });
 }
+
+function exitDetailsMenu(exitDetailsDivButton) {
+    exitDetailsDivButton.addEventListener('click', () => {
+        removeTaskDetailsMenu();
+        body.classList.remove('blur');
+        });
+    };
 
 addTaskButton.addEventListener('click', () => {
     createAddTaskMenu();
@@ -311,22 +322,45 @@ function createTask(appendLocation, indexNum) {
     completeTask(completeTaskCheckbox, taskDiv, indexNum);
 
     let taskName = createElementWithClassText('div', 'task-name', taskDiv, (currentProject.taskArray[indexNum].getTaskName()));
+    let dueDate = format(new Date(currentProject.taskArray[indexNum].getTaskDueDate()), 'dd MMM');
+    let taskDueDate = createElementWithClassText('div', 'task-due-date', taskDiv, dueDate);
+    let taskPriority = createElementWithClassText('div', 'task-priority', taskDiv, (currentProject.taskArray[indexNum].getTaskPriority()));
+    taskPriority.textContent = currentProject.taskArray[indexNum].getTaskPriority();
+    let expandTask = createElementWithClassText('button', 'expand-task-button', taskDiv, 'DETAILS');
+    expandTaskDetails(indexNum);
 }
 
 function completeTask(checkbox, taskDiv, indexNum) {
     checkbox.addEventListener('change', () => {
         taskDiv.remove();
         (currentProject.taskArray).splice(indexNum, 1);
+    });
+}
 
-        for (let i = 0; i < (currentProject.taskArray).length; i++) {
-            console.log((currentProject.taskArray)[i].getTaskName());
-        }
-        console.log('break');
-    })
+function expandTaskDetails(indexNum) {
+    let detailButtons = document.querySelectorAll('.expand-task-button');
+    detailButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            createDetails(indexNum);
+        });
+    });
+}
+
+function createDetails(indexNum) {
+    let detailsDiv = createElementWithClass('div', 'details-div', body);
+    body.classList.add('blur');
+    let exitDetailsDivButton = createElementWithID('button', 'exit-details-button', detailsDiv);
+    exitDetailsMenu(exitDetailsDivButton);
+
+    let taskName = createElementWithClassText('div', 'task-name', detailsDiv, (currentProject.taskArray[indexNum].getTaskName()));
+    let dueDate = format(new Date(currentProject.taskArray[indexNum].getTaskDueDate()), 'dd MMM');
+    let taskDueDate = createElementWithClassText('div', 'task-due-date', detailsDiv, dueDate);
+    let taskPriority = createElementWithClassText('div', 'task-priority', detailsDiv, (currentProject.taskArray[indexNum].getTaskPriority()));
+    taskPriority.textContent = currentProject.taskArray[indexNum].getTaskPriority();
+    let taskDescription = createElementWithClassText('div', 'task-description', detailsDiv, (currentProject.taskArray[indexNum].getTaskDescription()));
 }
 
 //On page load
-createInboxProject()
-console.log('now working');
+createInboxProject();
 
 // console.log((currentProject.taskArray[0]).getTaskName());

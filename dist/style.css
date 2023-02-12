@@ -56,6 +56,7 @@ footer {
     flex: 4;
     background-color: var(--main-color);
     position: relative;
+    overflow: auto;
 }
 
 #add-task {
@@ -77,31 +78,29 @@ button:hover {
 }
 
 #add-task-menu {
-    position: absolute;
-    background-color: var(--secondary-accent-color);
     width: 500px;
     height: 400px;
-    inset: 0;
-    margin: auto;
     display: grid;
     grid-template-rows: 1fr 1fr 3fr 1fr 1fr 1fr;
     align-items: center;
     justify-items: center;
 }
 
-.blur > :not(form) {
+.blur > :not(form):not(.details-div) {
     filter: blur(1px);
     pointer-events: none;
 }
 
-#exit-menu-button {
+#exit-menu-button,
+#exit-details-button {
     width: 25px;
     height: 25px;
     justify-self: end;
     margin-right: 25px;
 }
 
-#exit-menu-button::before {
+#exit-menu-button::before,
+#exit-details-button::before {
     content: 'x';
 }
 
@@ -153,11 +152,6 @@ button:hover {
     justify-content: flex-start;
 }
 
-#sidebar > button {
-    width: 200px;
-    height: 35px;
-}
-
 button#tasks-inbox {
     margin-top: 1rem;
 }
@@ -165,6 +159,7 @@ button#tasks-inbox {
 .projects {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 .project-heading {
@@ -186,3 +181,70 @@ button#tasks-inbox {
     justify-items: center;
 }
 
+.project {
+    width: 200px;
+    height: 35px;
+}
+
+.task-div {
+    display: grid;
+    grid-template: 1.5fr 1fr 1fr / 1fr 6fr 1fr;
+    align-items: center;
+    margin: 0.5rem;
+    padding: 0.5rem;
+    background-color: var(--sidebar-color);
+}
+
+.complete-task-checkbox {
+    grid-area: 1 / 1 / 4 / 2;
+    justify-self: center;
+}
+
+.expand-task-button {
+    grid-area: 1 / 3 / 4 / 4;
+    justify-self: center;
+}
+
+.details-div, 
+#add-task-menu {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    background-color: var(--secondary-accent-color);
+}
+
+.details-div {
+    width: 500px;
+    height: 400px;
+    color: white;
+    display: grid;
+    grid-template: 1fr 1fr 1fr 5fr / 1fr 20fr;
+}
+
+#exit-details-button {
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+.details-div > div {
+    margin: 1rem;
+}
+
+.details-div > .task-name {
+    grid-area: 2 / 1 / 3 / 3;
+}
+
+.details-div > .task-due-date {
+    grid-area: 3 / 1 / 4 / 2;
+}
+
+.details-div > .task-priority {
+    grid-area: 3 / 2 / 4 / 3;
+}
+
+.details-div > .task-description {
+    grid-area: 4 / 1 / 5 / 3;
+    margin: 1rem;
+    border: 3px solid white;
+    border-radius: 7.5px;
+    padding: 7.5px;
+}
