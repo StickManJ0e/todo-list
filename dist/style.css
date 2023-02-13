@@ -218,7 +218,7 @@ button#tasks-inbox {
     height: 400px;
     color: white;
     display: grid;
-    grid-template: 1fr 1fr 1fr 5fr / 1fr 20fr;
+    grid-template: 1fr 1fr 1fr 5fr / 1fr 4fr;
 }
 
 #exit-details-button {
@@ -235,10 +235,13 @@ button#tasks-inbox {
 
 .details-div > .task-due-date {
     grid-area: 3 / 1 / 4 / 2;
+    justify-self: end;
 }
 
 .details-div > .task-priority {
     grid-area: 3 / 2 / 4 / 3;
+    justify-self: start;
+    margin-left: 5px;
 }
 
 .details-div > .task-description {

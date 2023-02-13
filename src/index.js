@@ -10,6 +10,14 @@ let addProjectButton = document.querySelector('#add-project-button');
 let mainDiv = document.querySelector('div#main');
 let projects;
 
+let projectArraysStorage = [];
+localStorage.setItem('projectArraysStorage', JSON.stringify(projectArraysStorage));
+projectArraysStorage = JSON.parse(localStorage.getItem('projectArraysStorage'));
+
+let textArray = [];
+localStorage.setItem('textArray', JSON.stringify(textArray));
+textArray = JSON.parse(localStorage.getItem('textArray'));
+
 //Function that creates a input with a custom id and input type
 function createInputWithID(idName, inputType, name) {
     let element = document.createElement('input');
@@ -267,6 +275,14 @@ function createAddProjectMenu() {
 function addToProjectList(name) {
     let project = createProject(name);
     projectArrays.push(project);
+
+    //Save Project To Storage
+    projectArraysStorage.push(project);
+    localStorage.setItem('projectArraysStorage', JSON.stringify(projectArraysStorage));
+
+    textArray.push('1');
+    localStorage.setItem('textArray', JSON.stringify(textArray));
+    console.log(JSON.parse(localStorage.getItem('textArray')));
 }
 
 function submitProjectForm(form) {
@@ -360,7 +376,13 @@ function createDetails(indexNum) {
     let taskDescription = createElementWithClassText('div', 'task-description', detailsDiv, (currentProject.taskArray[indexNum].getTaskDescription()));
 }
 
+function createProjectsFromStorage() {
+    console.log(JSON.parse(localStorage.getItem('projectArraysStorage')));
+}
+
 //On page load
 createInboxProject();
+console.log(JSON.parse(localStorage.getItem('textArray')));
+// createProjectsFromStorage();
 
 // console.log((currentProject.taskArray[0]).getTaskName());
