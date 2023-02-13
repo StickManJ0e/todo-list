@@ -10,13 +10,13 @@ let addProjectButton = document.querySelector('#add-project-button');
 let mainDiv = document.querySelector('div#main');
 let projects;
 
-let projectArraysStorage = JSON.parse(window.localStorage.getItem('projectArraysStorage'));
+let projectArraysStorage = JSON.parse(window.localStorage.getItem('projectArraysStorage')) || [];
 window.localStorage.setItem('projectArraysStorage', JSON.stringify(projectArraysStorage));
 projectArraysStorage = JSON.parse(window.localStorage.getItem('projectArraysStorage'));
 
-let textArray = [];
-window.localStorage.setItem('textArray', JSON.stringify(textArray));
-textArray = JSON.parse(window.localStorage.getItem('textArray'));
+let taskArraysStorage = JSON.parse(window.localStorage.getItem('taskArraysStorage')) || [];
+window.localStorage.setItem('taskArraysStorage', JSON.stringify(taskArraysStorage));
+taskArraysStorage = JSON.parse(window.localStorage.getItem('taskArraysStorage'));
 
 //Function that creates a input with a custom id and input type
 function createInputWithID(idName, inputType, name) {
@@ -120,7 +120,7 @@ function createProjectSelector(addTaskMenu) {
     createInputDiv(addTaskMenu).appendChild(projectSelector);
 
     for (let i = 0; i < projectArrays.length; i++) {
-        let optionName = projectArrays[i].getProjectname();
+        let optionName = projectArrays[i].getProjectName;
         let option = document.createElement('option');
         option.setAttribute('value', optionName);
         option.textContent = optionName;
@@ -163,7 +163,10 @@ function submitTaskForm(form) {
 
         //Creates a Task object using form inputs
         let data = Object.fromEntries(new FormData(event.target).entries());
-        addToTaskList(data.name, data.description, data.date, data.priority, data.project);
+        let task = addToTaskList(data.name, data.description, data.date, data.priority, data.project);
+
+        taskArraysStorage.push(task);
+        window.localStorage.setItem('taskArraysStorage', JSON.stringify(taskArraysStorage));
         removeProjectTasks();
         createProjectTasks();
 
@@ -222,25 +225,26 @@ let Task = (taskName, taskDescription, taskDueDate, taskPriority, taskProject) =
     let getTaskPriority = () => taskPriority;
     let getTaskProject = () => taskProject;
 
-    return { getTaskName, getTaskDescription, getTaskDueDate, getTaskPriority, getTaskProject };
+    return { getTaskName, getTaskDescription, getTaskDueDate, getTaskPriority, getTaskProject, taskName, taskDescription, taskDueDate, taskPriority, taskProject};
 }
 
 
 //Add task to selected project list
 function addToTaskList(name, description, date, priority, project) {
     let task = Task(name, description, date, priority, project);
-    let projectIndex = projectArrays.findIndex(object => object.getProjectname() === project);
+    let projectIndex = projectArrays.findIndex(object => object.getProjectName === project);
     (projectArrays[projectIndex].taskArray).push(task);
 
     if (projectIndex !== 0) {
         (projectArrays[0].taskArray).push(task);
     }
+    return task;
 }
 
 let createProject = (projectName) => {
-    let getProjectname = () => projectName;
+    let getProjectName =  projectName;
     let taskArray = [];
-    return { getProjectname, taskArray };
+    return { getProjectName, taskArray };
 }
 
 function createInboxProject() {
@@ -279,10 +283,6 @@ function addToProjectList(name) {
     //Save Project To Storage
     projectArraysStorage.push(project);
     window.localStorage.setItem('projectArraysStorage', JSON.stringify(projectArraysStorage));
-
-    textArray.push('1');
-    window.localStorage.setItem('textArray', JSON.stringify(textArray));
-    console.log(JSON.parse(window.localStorage.getItem('textArray')));
 }
 
 function submitProjectForm(form) {
@@ -303,7 +303,7 @@ function changeCurrentProject() {
     projects = document.querySelectorAll('.project');
     projects.forEach((project) => {
         project.addEventListener('click', () => {
-            let projectIndex = projectArrays.findIndex(object => object.getProjectname() === (project.textContent).toLowerCase());
+            let projectIndex = projectArrays.findIndex(object => object.getProjectName === (project.textContent).toLowerCase());
             currentProject = projectArrays[projectIndex];
             removeProjectTasks();
             createProjectTasks();
@@ -377,12 +377,28 @@ function createDetails(indexNum) {
 }
 
 function createProjectsFromStorage() {
-    console.log(JSON.parse(window.localStorage.getItem('projectArraysStorage')));
+    projectArraysStorage = JSON.parse(window.localStorage.getItem('projectArraysStorage'));
+    projectArraysStorage.forEach((project) => {
+        projectArrays.push(createProject(project.getProjectName));
+        createProjectDiv((project.getProjectName).toUpperCase());
+        changeCurrentProject();
+    })
+}
+
+function createTasksFromStorage() {
+    taskArraysStorage = JSON.parse(window.localStorage.getItem('taskArraysStorage'));
+    taskArraysStorage.forEach((task) => {
+        console.log(task);
+        addToTaskList(task.taskName, task.taskDescription, task.taskDueDate, task.taskPriority, task.taskProject);
+
+        removeProjectTasks();
+        createProjectTasks();
+    })
 }
 
 //On page load
 createInboxProject();
-console.log(JSON.parse(window.localStorage.getItem('textArray')));
 createProjectsFromStorage();
+createTasksFromStorage();
 
 // console.log((currentProject.taskArray[0]).getTaskName());
