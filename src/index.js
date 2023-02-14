@@ -237,6 +237,7 @@ function addToTaskList(name, description, date, priority, project) {
 
     if (projectIndex !== 0) {
         (projectArrays[0].taskArray).push(task);
+        return task;
     }
     return task;
 }
@@ -348,6 +349,12 @@ function createTask(appendLocation, indexNum) {
 
 function completeTask(checkbox, taskDiv, indexNum) {
     checkbox.addEventListener('change', () => {
+        taskArraysStorage = JSON.parse(window.localStorage.getItem('taskArraysStorage'))
+        let storageIndex = taskArraysStorage.findIndex(object => object.taskName === (currentProject.taskArray[indexNum]).getTaskName());
+        (taskArraysStorage).splice(storageIndex, 1);
+        window.localStorage.setItem('taskArraysStorage', JSON.stringify(taskArraysStorage));
+        taskArraysStorage = JSON.parse(window.localStorage.getItem('taskArraysStorage'));
+        
         taskDiv.remove();
         (currentProject.taskArray).splice(indexNum, 1);
     });
