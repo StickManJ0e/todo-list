@@ -2,6 +2,24 @@ console.log("index.js is working");
 
 import { format } from 'date-fns';
 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyC0mWOC9upkNc2gXbtNSLWtMy5t4eYyLyM",
+  authDomain: "todo-list-c32b1.firebaseapp.com",
+  projectId: "todo-list-c32b1",
+  storageBucket: "todo-list-c32b1.appspot.com",
+  messagingSenderId: "501194443757",
+  appId: "1:501194443757:web:b445e89c18653212caf5e4"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
 let addTaskButton = document.querySelector('#add-task');
 let body = document.querySelector('body');
 let projectArrays = [];
