@@ -1,5 +1,8 @@
 # Todo List
 A simple todo list with all the classic features of creating tasks and sorting them into specific projects. Project is built with Webpack, HTML and Javascript, as well as utilising the local storage property to save tasks locally on user's device.
+
+Live Demo: https://stickmanj0e.github.io/todo-list/
+
 ![Project home page](src/data/home.png)
 
 ## Features
