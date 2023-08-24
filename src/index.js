@@ -1,5 +1,3 @@
-console.log("index.js is working");
-
 import { format } from 'date-fns';
 
 let addTaskButton = document.querySelector('#add-task');
@@ -395,7 +393,6 @@ function createProjectsFromStorage() {
 function createTasksFromStorage() {
     taskArraysStorage = JSON.parse(window.localStorage.getItem('taskArraysStorage'));
     taskArraysStorage.forEach((task) => {
-        console.log(task);
         addToTaskList(task.taskName, task.taskDescription, task.taskDueDate, task.taskPriority, task.taskProject);
 
         removeProjectTasks();
@@ -407,5 +404,3 @@ function createTasksFromStorage() {
 createInboxProject();
 createProjectsFromStorage();
 createTasksFromStorage();
-
-// console.log((currentProject.taskArray[0]).getTaskName());
